@@ -1,0 +1,70 @@
+{
+  "version": "1.0.0",
+  "created": "2026-04-22T01:13:00.000Z",
+  "description": "Sample queries for RAG search demonstration",
+  "queries": [
+    {
+      "id": "ai_basics",
+      "text": "What is artificial intelligence?",
+      "category": "basics",
+      "topK": 3,
+      "similarityThreshold": 0.0
+    },
+    {
+      "id": "neural_networks",
+      "text": "How do neural networks work?",
+      "category": "basics",
+      "topK": 3,
+      "similarityThreshold": 0.0
+    },
+    {
+      "id": "machine_learning",
+      "text": "Machine learning algorithms and techniques",
+      "category": "basics",
+      "topK": 3,
+      "similarityThreshold": 0.0
+    },
+    {
+      "id": "deep_learning",
+      "text": "Deep learning applications and architectures",
+      "category": "advanced",
+      "topK": 3,
+      "similarityThreshold": 0.0
+    },
+    {
+      "id": "computer_vision",
+      "text": "Computer vision and image processing",
+      "category": "applications",
+      "topK": 3,
+      "similarityThreshold": 0.0
+    },
+    {
+      "id": "nlp",
+      "text": "Natural language processing and transformers",
+      "category": "applications",
+      "topK": 3,
+      "similarityThreshold": 0.0
+    },
+    {
+      "id": "ai_ethics",
+      "text": "What are the ethical considerations in AI development?",
+      "category": "ethics",
+      "topK": 3,
+      "similarityThreshold": 0.0
+    },
+    {
+      "id": "future_directions",
+      "text": "Future directions and challenges in AI research",
+      "category": "research",
+      "topK": 3,
+      "similarityThreshold": 0.0
+    }
+  ],
+  "searchOptions": {
+    "defaultTopK": 5,
+    "defaultSimilarityThreshold": 0.1,
+    "embeddingModel": "Xenova/all-MiniLM-L6-v2",
+    "embeddingFormat": "normalized",
+    "includeMetadata": true
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "name": "@rag/simple-rag",
+  "version": "1.0.0",
+  "description": "Simple RAG implementation with semantic chunking, embeddings, and retrieval",
+  "private": true,
+  "scripts": {
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "test:coverage": "pnpm -r test:coverage",
+    "lint": "pnpm -r lint",
+    "lint:fix": "pnpm -r lint:fix",
+    "clean": "pnpm -r clean",
+    "dev:indexing": "pnpm --filter @rag-indexing/core dev",
+    "dev:retrieval": "pnpm --filter @rag-retrieval/core dev",
+    "install:all": "pnpm install",
+    "bootstrap": "pnpm install"
+  },
+  "keywords": [
+    "rag",
+    "retrieval-augmented-generation",
+    "semantic-search",
+    "embeddings",
+    "chunking",
+    "typescript",
+    "pnpm",
+    "monorepo"
+  ],
+  "author": "RAG Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^29.5.5",
+    "@types/node": "^20.6.0",
+    "@typescript-eslint/eslint-plugin": "^6.7.0",
+    "@typescript-eslint/parser": "^6.7.0",
+    "eslint": "^8.49.0",
+    "jest": "^29.7.0",
+    "rimraf": "^5.0.5",
+    "ts-jest": "^29.1.1",
+    "ts-node": "^10.9.1",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.2.2"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "pnpm": ">=10.0.0"
+  },
+  "packageManager": "pnpm@10.33.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/rag-indexing.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-org/rag-indexing/issues"
+  },
+  "homepage": "https://github.com/your-org/rag-indexing#readme"
+}

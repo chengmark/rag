@@ -1,0 +1,3 @@
+packages:
+  - 'rag-indexing/*'
+  - 'rag-retrieval/*'
