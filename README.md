@@ -51,9 +51,13 @@ REST API service for document indexing
 
 **Endpoints:**
 ```http
-POST   /index          # Index documents (async)
-GET    /index/{id}     # Check indexing status
+POST   /indexing          # Index documents (async)
+GET    /indexing/{id}     # Check indexing status
 ```
+
+**Tech Stack:**
+- Encore
+- TypeScript
 
 ##### **rag-indexing-job**
 Background processing service

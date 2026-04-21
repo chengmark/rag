@@ -63,9 +63,7 @@ function loadQueries(): QueryFile {
 }
 
 async function demonstrateBasicSearch() {
-  logger.info('=== Basic Search Demo ===', {
-    operation: 'demo_basic_search'
-  });
+  logger.info('=== Basic Search Demo ===');
   
   const embeddingFile = './src/example/embedding-results.json';
   const queryData = loadQueries();
@@ -76,37 +74,19 @@ async function demonstrateBasicSearch() {
     
     // Get statistics
     const stats = searcher.getStats();
-    logger.info('Embedding file statistics', {
-      operation: 'file_stats',
-      fileExists: stats.fileExists,
-      embeddingCount: stats.embeddingCount,
-      dimensions: stats.dimensions,
-      model: stats.model,
-      format: stats.format
-    });
+    logger.info('Embedding file statistics');
     
-    logger.info(`Loaded ${queryData.queries.length} queries from example-query.json`, {
-      operation: 'load_queries',
-      queryCount: queryData.queries.length
-    });
+    logger.info(`Loaded ${queryData.queries.length} queries from example-query.json`);
+    
     
     if (!stats.fileExists || stats.embeddingCount === 0) {
-      logger.warn('No embeddings found. Please run the convert-embedding-example first.', {
-        operation: 'demo_basic_search',
-        embeddingFile
-      });
+      logger.warn('No embeddings found. Please run the convert-embedding-example first.');
       return;
     }
     
     // Process queries from JSON file
     for (const queryConfig of queryData.queries) {
-      logger.info(`Processing query: "${queryConfig.text}"`, {
-        operation: 'process_query',
-        queryId: queryConfig.id,
-        category: queryConfig.category,
-        topK: queryConfig.topK,
-        threshold: queryConfig.similarityThreshold
-      });
+      logger.info(`Processing query: "${queryConfig.text}"`);
       
       try {
         const results = await searcher.search(queryConfig.text, { 
@@ -114,54 +94,27 @@ async function demonstrateBasicSearch() {
           similarityThreshold: queryConfig.similarityThreshold 
         });
         
-        logger.info(`Found ${results.length} results for query: "${queryConfig.text}"`, {
-          operation: 'search_results',
-          queryId: queryConfig.id,
-          resultCount: results.length
-        });
+        logger.info(`Found ${results.length} results for query: "${queryConfig.text}"`);
         
         if (results.length === 0) {
-          logger.info('No results found (try lowering similarity threshold)', {
-            operation: 'search_results',
-            queryId: queryConfig.id,
-            threshold: queryConfig.similarityThreshold
-          });
+          logger.info('No results found (try lowering similarity threshold)');
           continue;
         }
         
         results.forEach((result, index) => {
-          logger.info(`Result ${index + 1} (Similarity: ${result.similarity.toFixed(4)})`, {
-            operation: 'search_result',
-            queryId: queryConfig.id,
-            index: index + 1,
-            similarity: result.similarity,
-            content: result.content.substring(0, 150),
-            chunkIndex: result.chunkIndex,
-            source: result.source,
-            metadata: Object.keys(result.metadata).length > 0 
-              ? JSON.stringify(result.metadata, null, 6).substring(0, 100)
-              : undefined
-          });
+          logger.info(`Result ${index + 1} (Similarity: ${result.similarity.toFixed(4)})`);
           logger.info(`Content: ${result.content.substring(0, 150)}...`);
         });
         
-        logger.debug('Separator line', {
-          operation: 'separator'
-        });
+        logger.debug('========================================');
         
       } catch (error) {
-        logger.error(`Error searching for "${queryConfig.text}"`, error, {
-          operation: 'search_error',
-          queryId: queryConfig.id,
-          queryText: queryConfig.text
-        });
+        logger.error(`Error searching for "${queryConfig.text}"`, error);
       }
     }
     
   } catch (error) {
-    logger.error('Error in basic search demo', error, {
-      operation: 'demo_basic_search'
-    });
+    logger.error('Error in basic search demo', error);
   }
 }
 
@@ -169,9 +122,7 @@ async function demonstrateBasicSearch() {
  * Demonstrate different search options and strategies
  */
 async function demonstrateSearchStrategies() {
-  logger.info('=== Search Strategies Demo ===', {
-    operation: 'demo_search_strategies'
-  });
+  logger.info('=== Search Strategies Demo ===');
   
   const embeddingFile = './src/example/embedding-results.json';
   const testQuery = "artificial intelligence and machine learning";
@@ -180,46 +131,26 @@ async function demonstrateSearchStrategies() {
     const searcher = new SearchChunkByString(embeddingFile);
     
     // Test different topK values
-    logger.info(`Testing different topK values for query: "${testQuery}"`, {
-      operation: 'test_topk_values',
-      query: testQuery
-    });
+    logger.info(`Testing different topK values for query: "${testQuery}"`);
     
     const topKValues = [1, 3, 5, 10];
     
     for (const topK of topKValues) {
-      logger.info(`Testing topK ${topK}`, {
-        operation: 'test_topk',
-        topK,
-        query: testQuery
-      });
+      logger.info(`Testing topK ${topK}`);
       
       try {
         const results = await searcher.search(testQuery, { topK });
         
         results.forEach((result, index) => {
-          logger.debug(`TopK ${topK} result ${index + 1}`, {
-            operation: 'test_topk_result',
-            topK,
-            index: index + 1,
-            similarity: result.similarity,
-            content: result.content.substring(0, 100)
-          });
+          logger.debug(`TopK ${topK} result ${index + 1}`);
         });
       } catch (error) {
-        logger.error(`Error with topK ${topK}`, error, {
-          operation: 'test_topk',
-          topK,
-          query: testQuery
-        });
+        logger.error(`Error with topK ${topK}`);
       }
     }
     
     // Test similarity thresholds
-    logger.info('--- Similarity Threshold Filtering ---', {
-      operation: 'test_thresholds',
-      query: testQuery
-    });
+    logger.info('--- Similarity Threshold Filtering ---');
     
     try {
       const allResults = await searcher.search(testQuery, { topK: 10, similarityThreshold: 0 });
@@ -227,42 +158,23 @@ async function demonstrateSearchStrategies() {
       
       for (const threshold of thresholds) {
         const filteredResults = allResults.filter(r => r.similarity >= threshold);
-        logger.info(`Threshold ${threshold}: ${filteredResults.length} results`, {
-          operation: 'test_threshold',
-          threshold,
-          resultCount: filteredResults.length
-        });
+        logger.info(`Threshold ${threshold}: ${filteredResults.length} results`);
         
         if (filteredResults.length > 0) {
-          logger.debug(`Best match for threshold ${threshold}`, {
-            operation: 'test_threshold',
-            threshold,
-            similarity: filteredResults[0].similarity,
-            content: filteredResults[0].content.substring(0, 80)
-          });
+          logger.debug(`Best match for threshold ${threshold}`);
         }
       }
     } catch (error) {
-      logger.error('Error with threshold testing', error, {
-        operation: 'test_thresholds',
-        query: testQuery
-      });
+      logger.error('Error with threshold testing', error);
     }
     
     // Test different embedding formats
-    logger.info('--- Embedding Format Testing ---', {
-      operation: 'test_formats',
-      query: testQuery
-    });
+    logger.info('--- Embedding Format Testing ---');
     
     const formats = [EmbeddingFormat.NORMALIZED, EmbeddingFormat.RAW];
     
     for (const format of formats) {
-      logger.info(`Testing format: ${format}`, {
-        operation: 'test_format',
-        format,
-        query: testQuery
-      });
+      logger.info(`Testing format: ${format}`);
       
       try {
         const results = await searcher.search(testQuery, { 
@@ -272,31 +184,17 @@ async function demonstrateSearchStrategies() {
         });
         
         if (results.length > 0) {
-          logger.debug(`Top result for format ${format}`, {
-            operation: 'test_format',
-            format,
-            similarity: results[0].similarity,
-            content: results[0].content.substring(0, 80)
-          });
+          logger.debug(`Top result for format ${format}`);
         } else {
-          logger.info(`No results found for format ${format}`, {
-            operation: 'test_format',
-            format
-          });
+          logger.info(`No results found for format ${format}`);
         }
       } catch (error) {
-        logger.error(`Error with format ${format}`, error, {
-          operation: 'test_format',
-          format,
-          query: testQuery
-        });
+        logger.error(`Error with format ${format}`, error);
       }
     }
     
   } catch (error) {
-    logger.error('Error in search strategies demo', error, {
-      operation: 'demo_search_strategies'
-    });
+    logger.error('Error in search strategies demo');
   }
 }
 
@@ -304,9 +202,7 @@ async function demonstrateSearchStrategies() {
  * Demonstrate batch searching
  */
 async function demonstrateBatchSearch() {
-  logger.info('=== Batch Search Demo ===', {
-    operation: 'demo_batch_search'
-  });
+  logger.info('=== Batch Search Demo ===');
   
   const embeddingFile = './src/example/embedding-results.json';
   
@@ -319,75 +215,43 @@ async function demonstrateBatchSearch() {
       "AI applications"
     ];
     
-    logger.info(`Processing ${queries.length} queries in batch`, {
-      operation: 'batch_search',
-      queryCount: queries.length
-    });
+    logger.info(`Processing ${queries.length} queries in batch`);
     
     // Method 1: Using convenience function
-    logger.info('--- Using searchMultipleQueries convenience function ---', {
-      operation: 'batch_search_method1'
-    });
+    logger.info('--- Using searchMultipleQueries convenience function ---');
     
     try {
       const batchResults = await searchMultipleQueries(queries, embeddingFile, { topK: 2 });
       
       batchResults.forEach(({ query, results }) => {
-        logger.info(`Batch search results for query: "${query}"`, {
-          operation: 'batch_search_results',
-          query,
-          resultCount: results.length
-        });
+        logger.info(`Batch search results for query: "${query}"`);
         if (results.length > 0) {
           results.forEach((result, index) => {
-            logger.debug(`Batch search result ${index + 1}`, {
-              operation: 'batch_search_result',
-              query,
-              index: index + 1,
-              similarity: result.similarity,
-              content: result.content.substring(0, 80)
-            });
+            logger.debug(`Batch search result ${index + 1}`);
           });
         } else {
-          logger.info(`No results found for query: "${query}"`, {
-            operation: 'batch_search_results',
-            query,
-            resultCount: 0
-          });
+          logger.info(`No results found for query: "${query}"`);
         }
       });
     } catch (error) {
-      logger.error('Error in batch search', error, {
-        operation: 'batch_search_method1'
-      });
+      logger.error('Error in batch search', error);
     }
     
     // Method 2: Using findMostSimilarChunks
-    logger.info('--- Using findMostSimilarChunks function ---', {
-      operation: 'batch_search_method2'
-    });
+    logger.info('--- Using findMostSimilarChunks function ---');
     
     try {
       const bestMatches = await findMostSimilarChunks(queries, embeddingFile, { topK: 1 });
       
       bestMatches.forEach(({ query, bestMatch }) => {
-        logger.info(`Best match for query: "${query}"`, {
-          operation: 'best_match',
-          query,
-          similarity: bestMatch.similarity,
-          content: bestMatch.content.substring(0, 100)
-        });
+        logger.info(`Best match for query: "${query}"`);
       });
     } catch (error) {
-      logger.error('Error finding best matches', error, {
-        operation: 'batch_search_method2'
-      });
+      logger.error('Error finding best matches', error);
     }
     
   } catch (error) {
-    logger.error('Error in batch search demo', error, {
-      operation: 'demo_batch_search'
-    });
+    logger.error('Error in batch search demo', error);
   }
 }
 
@@ -395,9 +259,7 @@ async function demonstrateBatchSearch() {
  * Demonstrate advanced search features
  */
 async function demonstrateAdvancedSearch() {
-  logger.info('=== Advanced Search Demo ===', {
-    operation: 'demo_advanced_search'
-  });
+  logger.info('=== Advanced Search Demo ===');
   
   const embeddingFile = './src/example/embedding-results.json';
   
@@ -405,42 +267,25 @@ async function demonstrateAdvancedSearch() {
     const searcher = new SearchChunkByString(embeddingFile);
     
     // Show all available chunks
-    logger.info('--- Available Chunks Preview ---', {
-      operation: 'preview_chunks'
-    });
+    logger.info('--- Available Chunks Preview ---');
     
     try {
       const allChunks = searcher.getAllChunks();
-      logger.info(`Total chunks: ${allChunks.length}`, {
-        operation: 'preview_chunks',
-        totalChunks: allChunks.length
-      });
+      logger.info(`Total chunks: ${allChunks.length}`);
       
       allChunks.slice(0, 3).forEach((chunk, index) => {
-        logger.debug(`Chunk ${index + 1} preview`, {
-          operation: 'preview_chunk',
-          index: index + 1,
-          content: chunk.content.substring(0, 150),
-          metadata: JSON.stringify(chunk.metadata, null, 2).substring(0, 200)
-        });
+        logger.debug(`Chunk ${index + 1} preview`);
       });
       
       if (allChunks.length > 3) {
-        logger.info(`... and ${allChunks.length - 3} more chunks`, {
-          operation: 'preview_chunks',
-          remainingChunks: allChunks.length - 3
-        });
+        logger.info(`... and ${allChunks.length - 3} more chunks`);
       }
     } catch (error) {
-      logger.error('Error getting chunks', error, {
-        operation: 'preview_chunks'
-      });
+      logger.error('Error getting chunks', error);
     }
     
     // Test with custom search options
-    logger.info('--- Custom Search Options ---', {
-      operation: 'custom_options'
-    });
+    logger.info('--- Custom Search Options ---');
     
     const customOptions: SearchOptions = {
       topK: 2,
@@ -457,50 +302,24 @@ async function demonstrateAdvancedSearch() {
     ];
     
     for (const query of advancedQueries) {
-      logger.info(`Processing advanced query: "${query}"`, {
-        operation: 'advanced_query',
-        query,
-        options: customOptions
-      });
+      logger.info(`Processing advanced query: "${query}"`);
       
       try {
         const results = await searcher.search(query, customOptions);
         
         results.forEach((result, index) => {
-          logger.debug(`Advanced search result ${index + 1}`, {
-            operation: 'advanced_result',
-            query,
-            index: index + 1,
-            similarity: result.similarity,
-            content: result.content.substring(0, 120),
-            chunkIndex: result.chunkIndex,
-            source: result.source
-          });
-          
-          if (Object.keys(result.metadata).length > 0) {
-            logger.debug(`Metadata sample for result ${index + 1}`, {
-              operation: 'advanced_result',
-              query,
-              metadataSample: Object.entries(result.metadata).slice(0, 3)
-            });
-          }
+          logger.debug(`Advanced search result ${index + 1} (similarity: ${result.similarity.toFixed(4)})`);
+          logger.debug(`Result content: ${result.content}`);
         });
       } catch (error) {
-        logger.error(`Error with advanced query "${query}"`, error, {
-          operation: 'advanced_query',
-          query
-        });
+        logger.error(`Error with advanced query "${query}"`, error);
       }
       
-      logger.debug('Separator line', {
-        operation: 'separator'
-      });
+      logger.debug('========================================');
     }
     
   } catch (error) {
-    logger.error('Error in advanced search demo', error, {
-      operation: 'demo_advanced_search'
-    });
+    logger.error('Error in advanced search demo', error);
   }
 }
 
@@ -515,20 +334,16 @@ export {
 // Export the main function to run all demos
 export async function runAllSearchDemos() {
   try {
-    await demonstrateBasicSearch();
+    // await demonstrateBasicSearch();
     // await demonstrateSearchStrategies();
     // await demonstrateBatchSearch();
-    // await demonstrateAdvancedSearch();
+    await demonstrateAdvancedSearch();
   } catch (error) {
-    logger.error('Error running search demos', error, {
-      operation: 'run_all_demos'
-    });
+    logger.error('Error running search demos', error);
   }
 }
 
 // Run if this file is executed directly
 if (require.main === module) {
-  runAllSearchDemos().catch(error => logger.error('Unhandled error in search demos', error, {
-    operation: 'main'
-  }));
+  runAllSearchDemos().catch(error => logger.error('Unhandled error in search demos', error));
 }

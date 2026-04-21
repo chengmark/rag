@@ -87,11 +87,7 @@ export class TxtLoader {
         const document = await this.load(filePath);
         documents.push(document);
       } catch (error) {
-        logger.warn(`Failed to load file ${filePath}`, {
-          operation: 'load_multiple_files',
-          filePath,
-          error: error instanceof Error ? error.message : 'Unknown error'
-        });
+        logger.warn(`Failed to load file ${filePath}`);
       }
     }
     

@@ -29,7 +29,7 @@
     "@huggingface/transformers": "^3.8.1",
     "@rag-indexing/core": "workspace:*",
     "node-fetch": "^3.3.2",
-    "ts-logger": "^0.1.5"
+    "tslog": "^4.10.2"
   },
   "devDependencies": {
     "@types/jest": "^29.5.5",

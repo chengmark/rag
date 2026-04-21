@@ -50,11 +50,7 @@ async function generateEmbedding(
     vector = vector[0] as number[];
   }
   
-  logger.debug(`Generated embedding dimensions: ${vector.length}`, {
-    operation: 'generate_embedding',
-    dimensions: vector.length,
-    model
-  });
+  logger.debug(`Generated embedding dimensions: ${vector.length}`);
   
   let processedVector = [...vector];
   
@@ -131,16 +127,9 @@ export class SearchChunkByString {
     try {
       const data = JSON.parse(readFileSync(this.embeddingFilePath, 'utf-8'));
       this.embeddings = data.embeddings || [];
-      logger.info(`Loaded ${this.embeddings.length} embeddings from ${this.embeddingFilePath}`, {
-        operation: 'load_embeddings',
-        filePath: this.embeddingFilePath,
-        embeddingCount: this.embeddings.length
-      });
+      logger.info(`Loaded ${this.embeddings.length} embeddings from ${this.embeddingFilePath}`);
     } catch (error) {
-      logger.error('Failed to load embeddings', error, {
-        operation: 'load_embeddings',
-        filePath: this.embeddingFilePath
-      });
+      logger.error('Failed to load embeddings', error);
       throw new Error(`Failed to load embeddings: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -162,12 +151,7 @@ export class SearchChunkByString {
 
     try {
       // Generate embedding for the query
-      logger.info(`Generating embedding for query: "${query}"`, {
-        operation: 'search_query',
-        query,
-        model: searchOptions.embeddingModel,
-        format: searchOptions.embeddingFormat
-      });
+      logger.info(`Generating embedding for query: "${query}"`);
       const queryEmbedding = await generateEmbedding(query, searchOptions.embeddingModel, {
         targetFormat: searchOptions.embeddingFormat
       });
@@ -195,11 +179,7 @@ export class SearchChunkByString {
         .slice(0, searchOptions.topK);
 
     } catch (error) {
-      logger.error('Search failed', error, {
-        operation: 'search',
-        query,
-        embeddingCount: this.embeddings.length
-      });
+      logger.error('Search failed', error);
       throw new Error(`Search failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }

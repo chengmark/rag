@@ -58,17 +58,9 @@ export class FileEmbeddingStorage implements EmbeddingStorage {
       };
       
       writeFileSync(this.filePath, JSON.stringify(data, null, 2), 'utf-8');
-      logger.info(`Saved ${embeddings.length} embeddings to ${this.filePath}`, {
-        operation: 'save_embeddings',
-        filePath: this.filePath,
-        embeddingCount: embeddings.length
-      });
+      logger.info(`Saved ${embeddings.length} embeddings to ${this.filePath}`);
     } catch (error) {
-      logger.error('Failed to save embeddings', error, {
-        operation: 'save_embeddings',
-        filePath: this.filePath,
-        embeddingCount: embeddings.length
-      });
+      logger.error('Failed to save embeddings', error);
       throw new Error(`Failed to save embeddings: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
@@ -84,17 +76,10 @@ export class FileEmbeddingStorage implements EmbeddingStorage {
     try {
       const data = JSON.parse(readFileSync(this.filePath, 'utf-8'));
       const embeddingCount = data.embeddings?.length || 0;
-      logger.info(`Loaded ${embeddingCount} embeddings from ${this.filePath}`, {
-        operation: 'load_embeddings',
-        filePath: this.filePath,
-        embeddingCount
-      });
+      logger.info(`Loaded ${embeddingCount} embeddings from ${this.filePath}`);
       return data.embeddings || [];
     } catch (error) {
-      logger.error('Failed to load embeddings', error, {
-        operation: 'load_embeddings',
-        filePath: this.filePath
-      });
+      logger.error('Failed to load embeddings', error);
       throw new Error(`Failed to load embeddings: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }

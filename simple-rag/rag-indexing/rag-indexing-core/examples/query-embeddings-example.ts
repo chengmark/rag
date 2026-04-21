@@ -7,9 +7,7 @@ import { logger } from '../src/utils/logger';
  */
 
 async function demonstrateEmbeddingQuery() {
-  logger.info('=== Embedding Query Demo ===', {
-    operation: 'demo_embedding_query'
-  });
+  );
 
   const embeddingFile = './examples/embedding-results.json';
   
@@ -23,22 +21,12 @@ async function demonstrateEmbeddingQuery() {
       "What are the ethical considerations in AI development?"
     ];
 
-    logger.info(`Loading embeddings from: ${embeddingFile}`, {
-      operation: 'load_embeddings',
-      embeddingFile
-    });
-    logger.info(`Processing ${queries.length} sample queries`, {
-      operation: 'process_queries',
-      queryCount: queries.length
-    });
+    );
+    );
 
     for (let i = 0; i < queries.length; i++) {
       const query = queries[i];
-      logger.info(`--- Query ${i + 1} ---`, {
-        operation: 'process_query',
-        index: i + 1,
-        query
-      });
+      );
       
       try {
         // Generate embedding for the query
@@ -53,27 +41,13 @@ async function demonstrateEmbeddingQuery() {
           embeddingFile
         );
 
-        logger.info(`Found ${results.length} relevant chunks`, {
-          operation: 'search_results',
-          index: i + 1,
-          resultCount: results.length
-        });
+        );
         
         results.forEach((result, index) => {
-          logger.info(`Result ${index + 1} (Similarity: ${result.similarity.toFixed(4)})`, {
-            operation: 'search_result',
-            queryIndex: i + 1,
-            resultIndex: index + 1,
-            similarity: result.similarity,
-            content: result.content.substring(0, 200),
-            chunkIndex: result.embedding.metadata.chunkIndex,
-            source: result.embedding.metadata.source
-          });
+          );
         });
 
-        logger.debug('Separator line', {
-          operation: 'separator'
-        });
+        );
 
       } catch (error) {
         logger.error(`Error processing query "${query}"`, error, {
@@ -89,15 +63,7 @@ async function demonstrateEmbeddingQuery() {
     });
     
     if (error instanceof Error) {
-      logger.info('Troubleshooting tips for embedding query', {
-        operation: 'troubleshooting',
-        tips: [
-          'Ensure embedding-results.json exists from running convert-embedding-example.ts',
-          'Check if @huggingface/transformers is installed',
-          'Verify the embedding file path is correct',
-          'Make sure you have enough memory for the model'
-        ]
-      });
+      );
     }
   }
 }
@@ -106,9 +72,7 @@ async function demonstrateEmbeddingQuery() {
  * Demonstrate batch querying for efficiency
  */
 async function demonstrateBatchQuerying() {
-  logger.info('=== Batch Querying Demo ===', {
-    operation: 'demo_batch_querying'
-  });
+  );
 
   const embeddingFile = './examples/embedding-results.json';
   
@@ -121,16 +85,10 @@ async function demonstrateBatchQuerying() {
       { id: 'ai_ethics', text: 'AI ethics and responsibility' }
     ];
 
-    logger.info(`Processing ${batchQueries.length} queries in batch`, {
-      operation: 'batch_processing',
-      queryCount: batchQueries.length
-    });
+    );
 
     // Generate all query embeddings first
-    logger.info('Generating query embeddings...', {
-      operation: 'generate_embeddings',
-      queryCount: batchQueries.length
-    });
+    );
     const queryEmbeddings = await Promise.all(
       batchQueries.map(async (query) => {
         const embedding = await generateEmbedding(query.text, 'Xenova/all-MiniLM-L6-v2', {
@@ -142,27 +100,14 @@ async function demonstrateBatchQuerying() {
 
     // Search for each query
     for (const queryData of queryEmbeddings) {
-      logger.info(`Batch query: ${queryData.text} (${queryData.id})`, {
-        operation: 'batch_query',
-        id: queryData.id,
-        query: queryData.text
-      });
+      );
       
       const results = await searchEmbeddings(queryData.embedding, 2, embeddingFile);
       
       if (results.length > 0) {
-        logger.info(`Top result for batch query: ${queryData.text}`, {
-          operation: 'batch_result',
-          id: queryData.id,
-          similarity: results[0].similarity,
-          content: results[0].content.substring(0, 150)
-        });
+        );
       } else {
-        logger.info(`No results found for batch query: ${queryData.text}`, {
-          operation: 'batch_result',
-          id: queryData.id,
-          resultCount: 0
-        });
+        );
       }
     }
 
@@ -177,18 +122,13 @@ async function demonstrateBatchQuerying() {
  * Demonstrate different search strategies
  */
 async function demonstrateSearchStrategies() {
-  logger.info('=== Search Strategies Demo ===', {
-    operation: 'demo_search_strategies'
-  });
+  );
 
   const embeddingFile = './examples/embedding-results.json';
   const testQuery = "artificial intelligence and machine learning fundamentals";
 
   try {
-    logger.info(`Test query: "${testQuery}"`, {
-      operation: 'test_query',
-      query: testQuery
-    });
+    );
 
     // Generate query embedding once
     const queryEmbedding = await generateEmbedding(testQuery, 'Xenova/all-MiniLM-L6-v2', {
@@ -199,11 +139,7 @@ async function demonstrateSearchStrategies() {
     const topKValues = [1, 3, 5, 10];
     
     for (const topK of topKValues) {
-      logger.info(`Testing topK ${topK}`, {
-        operation: 'test_topk',
-        topK,
-        query: testQuery
-      });
+      );
       
       const results = await searchEmbeddings(
         (queryEmbedding as any).vector, 
@@ -212,32 +148,19 @@ async function demonstrateSearchStrategies() {
       );
 
       results.forEach((result, index) => {
-        logger.debug(`TopK ${topK} result ${index + 1}`, {
-          operation: 'test_topk_result',
-          topK,
-          index: index + 1,
-          similarity: result.similarity,
-          content: result.content.substring(0, 100)
-        });
+        );
       });
     }
 
     // Similarity threshold filtering
-    logger.info('--- Similarity Threshold Filtering ---', {
-      operation: 'test_thresholds',
-      query: testQuery
-    });
+    );
     const allResults = await searchEmbeddings((queryEmbedding as any).vector, 10, embeddingFile);
     
     const thresholds = [0.8, 0.6, 0.4, 0.2];
     
     for (const threshold of thresholds) {
       const filteredResults = allResults.filter(r => r.similarity >= threshold);
-      logger.info(`Threshold ${threshold}: ${filteredResults.length} results`, {
-        operation: 'test_threshold',
-        threshold,
-        resultCount: filteredResults.length
-      });
+      );
     }
 
   } catch (error) {
@@ -264,3 +187,4 @@ if (require.main === module) {
     operation: 'main'
   }));
 }
+
